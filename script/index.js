@@ -23,6 +23,7 @@ const loadCategoryVideos = (id) => {
   .then((res) => res.json())
   .then((data) => {
     const clickedButton = document.getElementById(`btn-${id}`);
+    clickedButton.classList.active
     console.log(clickedButton);
     displayVideos(data.category);
   });
