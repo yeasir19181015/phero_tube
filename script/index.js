@@ -18,7 +18,6 @@ function loadCategories() {
 
 }
 
-
 function loadVideos() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
     .then((response) => response.json())
@@ -63,6 +62,7 @@ const displayVideoDetails = (video) => {
 
   detailsContainer.innerHTML = 
   `
+
 <div class="card bg-base-100 image-full  shadow-sm">
   <figure>
     <img
@@ -75,6 +75,7 @@ const displayVideoDetails = (video) => {
     </div>
   </div>
 </div>
+
   `
 }
 
@@ -84,6 +85,7 @@ const displayVideoDetails = (video) => {
 // "Music"
 // category_id : "1001"
 // }
+
 function displayCategories(categories) {
   //  get the container 
   const categoryContainer = document.getElementById('categoryContainer');
@@ -123,6 +125,7 @@ function displayCategories(categories) {
 //     "description": "Comedian Kevin Hart brings his unique brand of humor to life in 'Laugh at My Pain.' With 1.1K views, this show offers a hilarious and candid look into Kevin's personal stories, struggles, and triumphs. It's a laugh-out-loud experience filled with sharp wit, clever insights, and a relatable charm that keeps audiences coming back for more."
 // }
 
+
 const displayVideos = (videos) => {
   const videoContainer = document.getElementById('video-container');
 
@@ -159,8 +162,11 @@ const displayVideos = (videos) => {
     </div>
     <div class="intro">
         <h2 class="text-sm font-semibold">${video.title}</h2>
-        <p class="text-sm text-gray-400 flex gap-1 ">${video.authors[0].profile_name}
-        ${video.authors[0].verified}
+        <p class="text-sm text-gray-400 flex gap-1 ">
+        ${video.authors[0].profile_name}
+         ${video.authors[0].verified == true ? ` <img 
+            class="w-5 h-5"
+            src="https://img.icons8.com/?size=48&id=FNbnqlDTjR45&format=gif&color=f7f7f7" alt=""/>` : `` }
         </p>
         <p class="text-sm text-gray-400">${video.others.views}views 
         </p>
@@ -175,5 +181,9 @@ const displayVideos = (videos) => {
   });
 };
 
+document.getElementById("search-input").addEventListener("keyup",(e)=>{
+  const input = e.target.value;
+  console.log(input);
+})
 
 loadCategories();
