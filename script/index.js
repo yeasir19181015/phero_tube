@@ -1,3 +1,13 @@
+function removeActiveClass() {
+  const activeButtons = document.getElementsByClassName('active');
+
+  for(let btn of activeButtons){
+    btn.classList.remove("active");
+  }
+  console.log(activeButtons);
+  
+}
+
 function loadCategories() {
   // fetch the data 
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -12,7 +22,11 @@ function loadCategories() {
 function loadVideos() {
   fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
     .then((response) => response.json())
-    .then(data => displayVideos(data.videos))
+    .then(data => {
+      removeActiveClass();
+      document.getElementById('btn-all').classList.add("active")
+      displayVideos(data.videos)
+    })
 }
 
 const loadCategoryVideos = (id) => {
@@ -22,15 +36,47 @@ const loadCategoryVideos = (id) => {
   fetch(url)
   .then((res) => res.json())
   .then((data) => {
+    removeActiveClass(); // no active class in buttons 
+
+
     const clickedButton = document.getElementById(`btn-${id}`);
     clickedButton.classList.add("active");
+
     console.log(clickedButton);
     displayVideos(data.category);
   });
   
 };
+const loadVideoDetails = (videoId) => {
+  console.log(videoId)
+  const url = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`
+  fetch (url)
+  .then ((res) => res.json())
+  .then ((data) => displayVideoDetails(data.video))
+};
 
+const displayVideoDetails = (video) => {
+  console.log(video);
+  document.getElementById("video_details").showModal();
 
+  const detailsContainer = document.getElementById("details-container");
+
+  detailsContainer.innerHTML = 
+  `
+<div class="card bg-base-100 image-full  shadow-sm">
+  <figure>
+    <img
+      src="${video.thumbnail}" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">${video.title}</h2>
+    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+    <div class="card-actions justify-end">
+    </div>
+  </div>
+</div>
+  `
+}
 
 // {
 // category
@@ -77,7 +123,6 @@ function displayCategories(categories) {
 //     "description": "Comedian Kevin Hart brings his unique brand of humor to life in 'Laugh at My Pain.' With 1.1K views, this show offers a hilarious and candid look into Kevin's personal stories, struggles, and triumphs. It's a laugh-out-loud experience filled with sharp wit, clever insights, and a relatable charm that keeps audiences coming back for more."
 // }
 
-
 const displayVideos = (videos) => {
   const videoContainer = document.getElementById('video-container');
 
@@ -114,18 +159,21 @@ const displayVideos = (videos) => {
     </div>
     <div class="intro">
         <h2 class="text-sm font-semibold">${video.title}</h2>
-        <p class="text-sm text-gray-400 flex gap-1 ">${video.authors[0].profile_name}<img 
-            class="w-5 h-5"
-            src="https://img.icons8.com/?size=48&id=FNbnqlDTjR45&format=gif&color=f7f7f7" alt=""></p>
-            <p class="text-sm text-gray-400">${video.others.views}views </p>
+        <p class="text-sm text-gray-400 flex gap-1 ">${video.authors[0].profile_name}
+        ${video.authors[0].verified}
+        </p>
+        <p class="text-sm text-gray-400">${video.others.views}views 
+        </p>
     </div>
   </div>
+  <button onclick = loadVideoDetails('${video.video_id}') class="btn btn-block">Show Details</button>
 </div>
 
-    `
+    `;
     // append
     videoContainer.append(videoCard);
   });
 };
+
 
 loadCategories();
